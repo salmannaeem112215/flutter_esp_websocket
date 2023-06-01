@@ -1,13 +1,17 @@
+import 'dart:io';
+
 import 'package:esp_remote/headers/headers.dart';
 
 class NetworkController extends GetxController {
   final connectionStatus = 0.obs;
+  final ips = '0.0.0.0'.obs;
   late StreamSubscription<ConnectivityResult> connectivitySubscription;
 
   final Connectivity connectivity = Connectivity();
 
   @override
   void onInit() {
+    print('Network Controller');
     super.onInit();
     initConnectivity();
     connectivitySubscription =
@@ -28,13 +32,25 @@ class NetworkController extends GetxController {
     return _updateConnectionStatus(result);
   }
 
+  Future updateIps() async {
+    for (var interface in await NetworkInterface.list()) {
+      for (var addr in interface.addresses) {
+        if (addr.address.isNotEmpty) {
+          ips.value = addr.address;
+        }
+      }
+    }
+  }
+
   _updateConnectionStatus(ConnectivityResult? result) {
     switch (result) {
       case ConnectivityResult.wifi:
         connectionStatus.value = 1;
+        updateIps();
         break;
       case ConnectivityResult.mobile:
         connectionStatus.value = 2;
+        updateIps();
         break;
       case ConnectivityResult.none:
         connectionStatus.value = 0;
