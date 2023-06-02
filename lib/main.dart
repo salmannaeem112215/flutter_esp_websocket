@@ -17,6 +17,11 @@ class MainApp extends StatelessWidget {
       initialRoute: AppPages.initial,
       getPages: AppPages.routes(),
       initialBinding: NetworkBinding(),
+      theme: ThemeData(
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: kLightW,
+        foregroundColor: kDarkBg,
+      )),
     );
   }
 }

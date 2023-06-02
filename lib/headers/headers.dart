@@ -9,6 +9,10 @@ export 'package:url_strategy/url_strategy.dart'; // to remove # from url
 
 export '../main.dart';
 export '../routes/app_pages.dart';
+
+// Theme
+export '../theme/constants.dart';
+export '../theme/textstyle.dart';
 // home
 export '../modules/home/binding/home_binding.dart';
 export '../modules/home/controller/home_controller.dart';

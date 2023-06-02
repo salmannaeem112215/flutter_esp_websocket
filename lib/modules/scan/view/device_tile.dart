@@ -9,13 +9,24 @@ class DeviceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: Colors.white70,
       title: Text(device.name),
-      subtitle: Text(device.isLocked ? 'Locked' : 'Avaliable'),
+      trailing: device.isLocked
+          ? const Icon(Icons.lock)
+          : const Icon(Icons.lock_open),
       onTap: () {
-        Get.toNamed(
-          AppPages.home,
-          arguments: device,
-        );
+        if (device.isLocked) {
+          Get.snackbar(
+            'Device Locked!',
+            '${device.name} is locked by some other user. Please Scan Again or Try to connect with other ESP',
+            duration: const Duration(seconds: 4),
+          );
+        } else {
+          Get.toNamed(
+            AppPages.home,
+            arguments: device,
+          );
+        }
       },
     );
   }
