@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:esp_remote/headers/headers.dart';
-import 'package:get/get.dart';
 
 import '../../../sockets/ws_api.dart';
 
@@ -11,7 +8,7 @@ class HomeController extends GetxController {
   StreamSubscription<dynamic>? _subscription;
   final api = WsSocketApi();
   final deviceIp = ''.obs;
-
+  final command = 15.obs;
   @override
   void onInit() {
     super.onInit();
@@ -22,6 +19,8 @@ class HomeController extends GetxController {
 
   void _loadDevice() {
     print('Loadeed Bus Caalled');
+    _subscription!.cancel();
+
     _subscription = api.stream.listen((data) {
       deviceMessageController.text = data;
       _socketStream.add(data);
@@ -40,4 +39,6 @@ class HomeController extends GetxController {
   void sendCommand({String cmd = 'toggle'}) {
     api.send(cmd);
   }
+
+  void addNumber() {}
 }
