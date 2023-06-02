@@ -1,5 +1,7 @@
 import 'package:esp_remote/headers/headers.dart';
 
+import '../../../headers/headers.dart';
+
 class DeviceTile extends StatelessWidget {
   const DeviceTile({
     super.key,
@@ -22,9 +24,11 @@ class DeviceTile extends StatelessWidget {
             duration: const Duration(seconds: 4),
           );
         } else {
+          final hc = Get.find<HomeController>();
+          hc.deviceIp.value = device.ip;
+          hc.updateIp(device.ip);
           Get.toNamed(
             AppPages.home,
-            arguments: device,
           );
         }
       },
