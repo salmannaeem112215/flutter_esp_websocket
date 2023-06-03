@@ -6,39 +6,58 @@ class HomeController extends GetxController {
   final _socketStream = StreamController<dynamic>.broadcast();
   final deviceMessageController = TextEditingController();
   StreamSubscription<dynamic>? _subscription;
-  final api = WsSocketApi();
+  WsSocketApi? api;
   final deviceIp = ''.obs;
-  final command = 15.obs;
+  final command = 0.obs;
   @override
   void onInit() {
     super.onInit();
     if (deviceIp.value != '') {
-      _loadDevice();
+      connectDevice();
     }
   }
 
-  void _loadDevice() {
-    print('Loadeed Bus Caalled');
-    _subscription!.cancel();
+  void connectDevice() {
+    print(deviceIp.value);
+    if (deviceIp.value != '') {
+      if (api != null) {
+        api!.disconnect();
+      }
 
-    _subscription = api.stream.listen((data) {
-      deviceMessageController.text = data;
-      _socketStream.add(data);
-    });
-    // api.send('toggle');
+      api = WsSocketApi(deviceIp.value);
+      _subscription = api!.stream.listen((data) {
+        deviceMessageController.text = data;
+        _socketStream.add(data);
+      });
+    }
+  }
+
+  void disconnectDevice() {
+    if (_subscription != null) {
+      _subscription!.cancel();
+    }
+    if (api != null) {
+      api!.disconnect();
+      api = null;
+    }
   }
 
   void updateIp(String ip) {
     deviceIp.value = ip;
-    if (_subscription != null) {
-      _subscription!.cancel();
-    }
-    _loadDevice();
+    disconnectDevice();
+    connectDevice();
   }
 
   void sendCommand({String cmd = 'toggle'}) {
-    api.send(cmd);
+    // api.send(cmd);
+    api!.send(command.toString());
   }
 
   void addNumber() {}
+
+  @override
+  void onClose() {
+    disconnectDevice();
+    super.onClose();
+  }
 }

@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 class ScanController extends GetxController {
   final ipAddressS = '192.168.10.';
+  final getConnect = GetConnect();
   final List<Device> devices = <Device>[
     Device(
       name: 'ESP-1',
@@ -57,14 +58,17 @@ class ScanController extends GetxController {
         for (int i = 0; i < 256; i++) {
           final request = connect.get(baseUrl(baseVal, i)).then((value) {
             if (value.statusCode == 200) {
-              final res = getDeviceNameAndStatus(value.body);
+              final res = getDeviceNameWifiStatusAndLocked(value.body);
+              print('Value . status ==200');
               if (res != null) {
+                print('HI');
+                print(res.toList());
                 devices.add(
                   Device(
                     name: res[0] ?? '',
                     isConnected: res[1] == 'Connected',
-                    isLocked: res[1] == 'Connected',
-                    ip: baseUrl(baseVal, i),
+                    isLocked: res[2] == 'true',
+                    ip: '$baseVal$i',
                   ),
                 );
               }
@@ -94,24 +98,52 @@ class ScanController extends GetxController {
     return ipAddress.substring(0, lastDotIndex + 1);
   }
 
-  List<String?>? getDeviceNameAndStatus(String input) {
-    String deviceNameRegex = r"Device Name: (.+)";
-    String statusRegex = r"Status: (.+)";
+  List<String?>? getDeviceNameWifiStatusAndLocked(String input) {
+    String deviceNameRegex = r"Device Name: #(.+)<br>";
+    String wifiStatusRegex = r"WIFI-Status: #(.+)<br>";
+    String lockedStatusRegex = r"Locked-Status: #(.+)";
 
     RegExp deviceNamePattern = RegExp(deviceNameRegex);
-    RegExp statusPattern = RegExp(statusRegex);
+    RegExp wifiStatusPattern = RegExp(wifiStatusRegex);
+    RegExp lockedStatusPattern = RegExp(lockedStatusRegex);
 
     Match? deviceNameMatch = deviceNamePattern.firstMatch(input);
-    Match? statusMatch = statusPattern.firstMatch(input);
+    Match? wifiStatusMatch = wifiStatusPattern.firstMatch(input);
+    Match? lockedStatusMatch = lockedStatusPattern.firstMatch(input);
 
-    if (deviceNameMatch != null && statusMatch != null) {
+    if (deviceNameMatch != null &&
+        wifiStatusMatch != null &&
+        lockedStatusMatch != null) {
       String? deviceName = deviceNameMatch.group(1);
-      String? status = statusMatch.group(1);
-      return [deviceName, status];
+      String? wifiStatus = wifiStatusMatch.group(1);
+      String? lockedStatus = lockedStatusMatch.group(1);
+      return [deviceName, wifiStatus, lockedStatus];
     } else {
       return null;
     }
   }
+
+  Future<Device?> getDeviceInfo(String ip) async {
+    GetConnect();
+    final response = await getConnect.get(infoUrl(ip));
+
+    if (response.statusCode == 200) {
+      final res = getDeviceNameWifiStatusAndLocked(response.body);
+      if (res != null) {
+        print(res.toList());
+        devices.add(
+          Device(
+            name: res[0] ?? '',
+            isConnected: res[1] == 'Connected',
+            isLocked: res[1] == 'true',
+            ip: ip,
+          ),
+        );
+      }
+    }
+    return null;
+  }
 }
 
 String baseUrl(String baseVal, int val) => 'http://$baseVal$val:80/info';
+String infoUrl(String ip) => 'http://$ip:80/info';

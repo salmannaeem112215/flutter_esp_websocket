@@ -26,7 +26,7 @@ class DeviceTile extends StatelessWidget {
         } else {
           final hc = Get.find<HomeController>();
           hc.deviceIp.value = device.ip;
-          // hc.updateIp(device.ip);
+          hc.updateIp(device.ip);
           Get.toNamed(
             AppPages.home,
           );

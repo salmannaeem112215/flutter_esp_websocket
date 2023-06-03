@@ -27,6 +27,12 @@ class HomeScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  InkWell(
+                      onTap: () {
+                        homeController.disconnectDevice();
+                        Get.back();
+                      },
+                      child: const Icon(Icons.arrow_back_ios_new_rounded)),
                   const Text(
                     'ESP-4',
                     style: kAppHeaderTitle,
@@ -58,7 +64,19 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Message From Device'),
+                    const Text(
+                      'Device Details',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
+                    Text('Connection:'),
+                    const SizedBox(height: 20),
+                    const Divider(),
+                    const Text(
+                      'Message From Device',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
                     const SizedBox(height: 10),
                     TextField(
                       enabled: false,
@@ -75,7 +93,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const Spacer(),
               const Divider(height: 1),
-              CommandSender(),
+              const CommandSender(),
             ],
           ),
         )),
