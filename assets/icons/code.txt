@@ -151,18 +151,73 @@ void handleWebSocketMessage(void* arg, uint8_t* data, size_t len) {
     if (strcmp((char*)data, "toggle") == 0) {
       ledState = !ledState;
       notifyClients();
-    }
-    else if (strcmp((char*)data, "0") == 0) {
-      ledState = false;
-      notifyClients();
-    }
-    else if (strcmp((char*)data, "1") == 0) {
+      connectedClient->text("Toggle command executed"); // Send a specific message
+    } else if (strcmp((char*)data, "0") == 0) {
       ledState = true;
       notifyClients();
+      connectedClient->text("Turned off"); // Send a specific message
+    } else if (strcmp((char*)data, "1") == 0) {
+      ledState = false;
+      notifyClients();
+      connectedClient->text("Turned on"); // Send a specific message
+    } else if (strcmp((char*)data, "disconnect") == 0) {
+      if (connectedClient != nullptr) {
+        connectedClient->close(1000, "Disconnected by client");
+        connectedClient = nullptr;
+        isLocked = false;
+        connectedClient->text("Disconnected"); // Send a specific message
+      }
     }
-    // add code for all commands 
+    else if (strcmp((char*)data, "2") == 0) {
+      connectedClient->text("2 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "3") == 0) {
+      connectedClient->text("3 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "4") == 0) {
+      connectedClient->text("4 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "5") == 0) {
+      connectedClient->text("5 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "6") == 0) {
+      connectedClient->text("6 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "7") == 0) {
+      connectedClient->text("7 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "8") == 0) {
+      connectedClient->text("8 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "9") == 0) {
+      connectedClient->text("9 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "10") == 0) {
+      connectedClient->text("10 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "11") == 0) {
+      connectedClient->text("11 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "12") == 0) {
+      connectedClient->text("12 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "13") == 0) {
+      connectedClient->text("13 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "14") == 0) {
+      connectedClient->text("14 is Send!"); // Send a specific message
+    }
+    else if (strcmp((char*)data, "15") == 0) {
+      connectedClient->text("15 is Send!"); // Send a specific message
+    }
+    else{
+      connectedClient->text("UnDefined Command");
+    }
+    
+    // Add more conditions and corresponding messages as needed
   }
 }
+
 
 void onEvent(AsyncWebSocket* server, AsyncWebSocketClient* client, AwsEventType type,
              void* arg, uint8_t* data, size_t len) {
@@ -209,7 +264,7 @@ String processor(const String& var) {
 }
 
 void handleInfoRequest(AsyncWebServerRequest* request) {
-  String deviceName = "ESP8266";
+  String deviceName = "ESP-01";
   String status = (WiFi.status() == WL_CONNECTED) ? "Connected" : "Not Connected";
   String locked = (isLocked == true) ? "true" : "false";
   

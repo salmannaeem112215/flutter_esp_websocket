@@ -1,7 +1,5 @@
 import 'package:esp_remote/headers/headers.dart';
 
-import '../../../headers/headers.dart';
-
 class DeviceTile extends StatelessWidget {
   const DeviceTile({
     super.key,
@@ -16,7 +14,7 @@ class DeviceTile extends StatelessWidget {
       trailing: device.isLocked
           ? const Icon(Icons.lock)
           : const Icon(Icons.lock_open),
-      onTap: () {
+      onTap: () async {
         if (device.isLocked) {
           Get.snackbar(
             'Device Locked!',
@@ -27,9 +25,14 @@ class DeviceTile extends StatelessWidget {
           final hc = Get.find<HomeController>();
           hc.deviceIp.value = device.ip;
           hc.updateIp(device.ip);
+          // if (res) {
           Get.toNamed(
             AppPages.home,
           );
+          // } else {
+          // Get.snackbar('Connection Failed',
+          // 'Failed to Establish Connected with ${device.name}');
+          // }
         }
       },
     );

@@ -11,7 +11,6 @@ class NetworkController extends GetxController {
 
   @override
   void onInit() {
-    print('Network Controller');
     super.onInit();
     initConnectivity();
     connectivitySubscription =

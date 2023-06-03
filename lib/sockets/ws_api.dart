@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../headers/headers.dart';
+
 class WsSocketApi {
   WsSocketApi(String ip)
       : _api = WebSocketChannel.connect(
@@ -8,9 +10,10 @@ class WsSocketApi {
             baseUrl(ip),
           ),
         );
+
   final WebSocketChannel _api;
+
   Stream<dynamic> get stream => _api.stream.map<dynamic>((data) {
-        print('websocket Data: $data');
         return data;
       });
 
@@ -23,8 +26,16 @@ class WsSocketApi {
     _api.sink.close();
   }
 
-  void connect(ip) {
-    // _api = ;
+  Future<bool> connect() async {
+    try {
+      await _api.stream.first;
+      return true; // Connection successful
+    } catch (error) {
+      if (kDebugMode) {
+        print('Connection failed: $error');
+      }
+      return false; // Connection failed
+    }
   }
 
   static const String cmdDisconnect = 'disconnect';

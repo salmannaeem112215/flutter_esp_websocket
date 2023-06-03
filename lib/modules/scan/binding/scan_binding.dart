@@ -6,5 +6,8 @@ class ScanBinding extends Bindings {
     Get.lazyPut<ScanController>(
       () => ScanController(),
     );
+    Get.lazyPut<HomeController>(
+      () => HomeController(),
+    );
   }
 }

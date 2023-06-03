@@ -37,12 +37,10 @@ class ScanController extends GetxController {
 
   @override
   void onReady() async {
-    // await Future.delayed(const Duration(seconds: 1));
-    // scanDevices();
+    await Future.delayed(const Duration(seconds: 1));
+    await scanDevices();
     super.onReady();
   }
-
-// import 'dart:async';
 
   Future<void> scanDevices() async {
     devices.clear();
@@ -59,10 +57,7 @@ class ScanController extends GetxController {
           final request = connect.get(baseUrl(baseVal, i)).then((value) {
             if (value.statusCode == 200) {
               final res = getDeviceNameWifiStatusAndLocked(value.body);
-              print('Value . status ==200');
               if (res != null) {
-                print('HI');
-                print(res.toList());
                 devices.add(
                   Device(
                     name: res[0] ?? '',
@@ -124,20 +119,16 @@ class ScanController extends GetxController {
   }
 
   Future<Device?> getDeviceInfo(String ip) async {
-    GetConnect();
     final response = await getConnect.get(infoUrl(ip));
 
     if (response.statusCode == 200) {
       final res = getDeviceNameWifiStatusAndLocked(response.body);
       if (res != null) {
-        print(res.toList());
-        devices.add(
-          Device(
-            name: res[0] ?? '',
-            isConnected: res[1] == 'Connected',
-            isLocked: res[1] == 'true',
-            ip: ip,
-          ),
+        return Device(
+          name: res[0] ?? '',
+          isConnected: res[1] == 'Connected',
+          isLocked: res[1] == 'true',
+          ip: ip,
         );
       }
     }
