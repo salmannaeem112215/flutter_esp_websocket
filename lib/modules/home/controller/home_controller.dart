@@ -9,7 +9,9 @@ class HomeController extends GetxController {
   StreamSubscription<dynamic>? _subscription;
   WsSocketApi? api;
   final deviceIp = ''.obs;
+  final deviceName = ''.obs;
   final command = 0.obs;
+
   @override
   void onInit() {
     if (deviceIp.value != '') {
@@ -32,17 +34,20 @@ class HomeController extends GetxController {
 
       final sc = Get.find<ScanController>();
       final device = await sc.getDeviceInfo(deviceIp.value);
-
       if (device == null) {
         updateIp(deviceIp.value);
         return false;
       }
 
       if (device.isLocked == true) {
-        Get.snackbar('Device Locked', 'Device is Already Locked');
+        Get.snackbar('Device Locked', 'Device is Already Locked!');
+        Get.offAndToNamed(AppPages.scan);
+        Get.find<ScanController>().scanDevices();
         return false;
       }
       try {
+        deviceName.value = device.name;
+
         api = WsSocketApi(deviceIp.value);
         _subscription = api!.stream.listen((data) {
           deviceMessageController.text = data;

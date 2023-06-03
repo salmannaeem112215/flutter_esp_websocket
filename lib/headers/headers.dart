@@ -5,7 +5,6 @@ export 'package:get/get.dart';
 export 'package:flutter/foundation.dart';
 export 'package:connectivity_plus/connectivity_plus.dart';
 export 'package:flutter/services.dart';
-export 'package:url_strategy/url_strategy.dart'; // to remove # from url
 
 export '../main.dart';
 export '../routes/app_pages.dart';

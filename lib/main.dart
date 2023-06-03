@@ -2,7 +2,6 @@ import 'package:esp_remote/headers/headers.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  setPathUrlStrategy(); // to remove # from url
   runApp(const MainApp());
 }
 
@@ -17,11 +16,6 @@ class MainApp extends StatelessWidget {
       initialRoute: AppPages.initial,
       getPages: AppPages.routes(),
       initialBinding: NetworkBinding(),
-      theme: ThemeData(
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: kLightW,
-        foregroundColor: kDarkBg,
-      )),
     );
   }
 }

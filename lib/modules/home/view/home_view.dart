@@ -76,7 +76,13 @@ class HomeScreen extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w600),
                             ),
-                            Text('Connection:'),
+                            const SizedBox(height: 5),
+                            Text(
+                                '     Name: ${homeController.deviceName.value}'),
+                            const SizedBox(height: 3),
+                            Text(
+                              '     IP Address: ${homeController.deviceIp.value}',
+                            ),
                             const SizedBox(height: 20),
                             const Divider(),
                             const Text(

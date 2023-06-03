@@ -1,39 +1,9 @@
-import 'dart:io';
-
 import 'package:esp_remote/headers/headers.dart';
-import 'package:http/http.dart' as http;
-
-// import 'package:http/http.dart' as http;
 
 class ScanController extends GetxController {
   final ipAddressS = '192.168.10.';
   final getConnect = GetConnect();
-  final List<Device> devices = <Device>[
-    Device(
-      name: 'ESP-1',
-      isConnected: false,
-      isLocked: true,
-      ip: '192.168.10.7',
-    ),
-    Device(
-      name: 'ESP-2',
-      isConnected: false,
-      isLocked: true,
-      ip: '192.168.10.6',
-    ),
-    Device(
-      name: 'ESP-3',
-      isConnected: false,
-      isLocked: true,
-      ip: '192.168.10.5',
-    ),
-    Device(
-      name: 'ESP-4',
-      isConnected: false,
-      isLocked: false,
-      ip: '192.168.10.4',
-    ),
-  ].obs;
+  final List<Device> devices = <Device>[].obs;
 
   @override
   void onReady() async {
@@ -44,7 +14,6 @@ class ScanController extends GetxController {
 
   Future<void> scanDevices() async {
     devices.clear();
-
     final nc = Get.find<NetworkController>();
     if (nc.connectionStatus.value == 1 || nc.connectionStatus.value == 2) {
       final ip = nc.ips.value;
@@ -58,6 +27,7 @@ class ScanController extends GetxController {
             if (value.statusCode == 200) {
               final res = getDeviceNameWifiStatusAndLocked(value.body);
               if (res != null) {
+                print(' RES ${res.toList()}');
                 devices.add(
                   Device(
                     name: res[0] ?? '',
@@ -74,11 +44,13 @@ class ScanController extends GetxController {
         }
 
         try {
-          await Future.wait(requests).timeout(Duration(seconds: 20));
+          await Future.wait(requests).timeout(const Duration(seconds: 20));
           // Rest of the function after all requests are done within the time limit.
         } catch (e) {
           // Timeout occurred, handle the timeout here.
-          print('Timeout occurred. Stopping ongoing requests.');
+          if (kDebugMode) {
+            print('Timeout occurred. Stopping ongoing requests.');
+          }
         }
       } else {
         Get.snackbar('Internet Error', 'Please Try Again');
@@ -94,9 +66,9 @@ class ScanController extends GetxController {
   }
 
   List<String?>? getDeviceNameWifiStatusAndLocked(String input) {
-    String deviceNameRegex = r"Device Name: #(.+)<br>";
-    String wifiStatusRegex = r"WIFI-Status: #(.+)<br>";
-    String lockedStatusRegex = r"Locked-Status: #(.+)";
+    String deviceNameRegex = r"Device Name: #(.*?)<br>";
+    String wifiStatusRegex = r"WIFI-Status: #(.*?)<br>";
+    String lockedStatusRegex = r"Locked-Status: #(.*?)$";
 
     RegExp deviceNamePattern = RegExp(deviceNameRegex);
     RegExp wifiStatusPattern = RegExp(wifiStatusRegex);
@@ -112,6 +84,7 @@ class ScanController extends GetxController {
       String? deviceName = deviceNameMatch.group(1);
       String? wifiStatus = wifiStatusMatch.group(1);
       String? lockedStatus = lockedStatusMatch.group(1);
+
       return [deviceName, wifiStatus, lockedStatus];
     } else {
       return null;
@@ -127,7 +100,7 @@ class ScanController extends GetxController {
         return Device(
           name: res[0] ?? '',
           isConnected: res[1] == 'Connected',
-          isLocked: res[1] == 'true',
+          isLocked: res[2] == 'true',
           ip: ip,
         );
       }
