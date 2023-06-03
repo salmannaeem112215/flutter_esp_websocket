@@ -39,8 +39,8 @@ class HomeScreen extends StatelessWidget {
                               },
                               child:
                                   const Icon(Icons.arrow_back_ios_new_rounded)),
-                          const Text(
-                            'ESP-4',
+                          Text(
+                            homeController.deviceName.value,
                             style: kAppHeaderTitle,
                           ),
                           Obx(() {
