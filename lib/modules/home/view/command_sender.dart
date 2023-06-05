@@ -25,7 +25,7 @@ class CommandSender extends StatelessWidget {
           AsynIconButton(
             icon: Icons.arrow_back_ios_new_rounded,
             onTap: () async {
-              homeController.sendCommand(cmd: '0');
+              homeController.sendCommand(cmd: 'left');
               // await scanController.scanDevices();
             },
           ),
@@ -34,9 +34,7 @@ class CommandSender extends StatelessWidget {
             icon: Icons.arrow_back_ios_new_rounded,
             rotatedTuen: 2,
             onTap: () async {
-              print('gu');
-              homeController.sendCommand(cmd: '1');
-              // await scanController.scanDevices();
+              homeController.sendCommand(cmd: 'right');
             },
           ),
           const Spacer(),
