@@ -96,6 +96,17 @@ class HomeController extends GetxController {
     // api.send(cmd);
   }
 
+  void sendCounterCommand({String cmd = 'toggle'}) {
+    if (api != null) {
+      print('commands ${command.value.toString()}');
+      api!.send(command.value.toString());
+    } else {
+      Get.snackbar(
+          'Error', 'Please Go back to Scan Screen and Try to Connect again');
+    }
+    // api.send(cmd);
+  }
+
   void addNumber() {}
 
   @override

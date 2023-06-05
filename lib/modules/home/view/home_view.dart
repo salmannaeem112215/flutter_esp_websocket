@@ -1,4 +1,5 @@
 import 'package:esp_remote/headers/headers.dart';
+import 'package:esp_remote/modules/home/view/left_right.dart';
 
 import 'command_sender.dart';
 
@@ -105,6 +106,8 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+                      const Spacer(),
+                      const LeftRightButtons(),
                       const Spacer(),
                       const Divider(height: 1),
                       const CommandSender(),

@@ -152,7 +152,17 @@ void handleWebSocketMessage(void* arg, uint8_t* data, size_t len) {
       ledState = !ledState;
       notifyClients();
       connectedClient->text("Toggle command executed"); // Send a specific message
-    } else if (strcmp((char*)data, "0") == 0) {
+    }
+   else if (strcmp((char*)data, "left") == 0) {
+      ledState = true;
+      notifyClients();
+      connectedClient->text("Turned off"); // Send a specific message
+    } else if (strcmp((char*)data, "right") == 0) {
+      ledState = false;
+      notifyClients();
+      connectedClient->text("Turned on"); // Send a specific message
+    }
+     else if (strcmp((char*)data, "0") == 0) {
       ledState = true;
       notifyClients();
       connectedClient->text("Turned off"); // Send a specific message
