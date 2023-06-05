@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 
 class AsynIconButton extends StatefulWidget {
-  const AsynIconButton({super.key, this.onTap, required this.img});
+  const AsynIconButton({
+    super.key,
+    this.onTap,
+    this.img,
+    this.icon,
+    this.rotatedTuen = 0,
+  });
   final Future<void> Function()? onTap;
-  final String img;
+  final String? img;
+
+  final IconData? icon;
+  final int rotatedTuen;
   @override
   State<AsynIconButton> createState() => _AsynIconButtonState();
 }
@@ -41,15 +50,32 @@ class _AsynIconButtonState extends State<AsynIconButton> {
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(50)),
         child: !isLoading
-            ? Image.asset(
-                widget.img,
-                height: 25,
-                color: Colors.black87,
-              )
+            ? getIcon()
             : const CircularProgressIndicator(
                 color: Colors.black87,
               ),
       ),
     );
+  }
+
+  getIcon() {
+    if (widget.img != null) {
+      return Image.asset(
+        widget.img!,
+        height: 25,
+        color: Colors.black87,
+      );
+    } else if (widget.icon != null) {
+      return RotatedBox(
+        quarterTurns: widget.rotatedTuen,
+        child: Icon(
+          widget.icon,
+          size: 25,
+          color: Colors.black87,
+        ),
+      );
+    } else {
+      return const SizedBox(height: 24);
+    }
   }
 }

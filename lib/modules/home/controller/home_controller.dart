@@ -88,7 +88,7 @@ class HomeController extends GetxController {
 
   void sendCommand({String cmd = 'toggle'}) {
     if (api != null) {
-      api!.send(command.toString());
+      api!.send(cmd);
     } else {
       Get.snackbar(
           'Error', 'Please Go back to Scan Screen and Try to Connect again');
